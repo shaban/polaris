@@ -188,30 +188,35 @@ func getIndexes(s string) (m map[string]int, err error) {
 	if m[TemplateStart] == m[TemplateEnd] {
 		delete(m, TemplateStart)
 		delete(m, TemplateEnd)
-	} else {
-		// if one of both is -1 it means one of the tags is missing
-		// or if the end comes before the start it means the order of
-		// the tags is bollocks so we throw an error in any of these cases
-		// same goes with all the other tags we process down below
-		if (m[TemplateStart] == -1 || m[TemplateEnd] == -1) || (m[TemplateEnd] < m[TemplateStart]) {
-			return nil, fmt.Errorf("Template Tag not well formed")
-		}
+		goto checkScriptTags
 	}
+	// if one of both is -1 it means one of the tags is missing
+	// or if the end comes before the start it means the order of
+	// the tags is bollocks so we throw an error in any of these cases
+	// same goes with all the other tags we process down below
+	if (m[TemplateStart] == -1 || m[TemplateEnd] == -1) || (m[TemplateEnd] < m[TemplateStart]) {
+		return nil, fmt.Errorf("Template Tag not well formed")
+	}
+	
+	checkScriptTags: 
 	if m[ScriptStart] == m[ScriptEnd] {
 		delete(m, ScriptStart)
 		delete(m, ScriptEnd)
-	} else {
+		goto checkStyleTags
+	} 
 		if (m[ScriptStart] == -1 || m[ScriptEnd] == -1) || (m[ScriptEnd] < m[ScriptStart]) {
 			return nil, fmt.Errorf("Script Tag not well formed")
 		}
-	}
+	checkStyleTags:
 	if m[StyleStart] == m[StyleEnd] {
 		delete(m, StyleStart)
 		delete(m, StyleEnd)
-	} else {
+		goto result
+	} 
 		if (m[StyleStart] == -1 || m[StyleEnd] == -1) || (m[StyleEnd] < m[StyleStart]) {
 			return nil, fmt.Errorf("Style Tag not well formed")
 		}
-	}
+	
+	result:
 	return m, nil
 }
