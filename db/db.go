@@ -13,7 +13,8 @@ import (
 var (
 	pg *sql.DB
 )
-const(
+
+const (
 	CategoryIDs = "database.yaml.categoryIDs"
 )
 
@@ -38,6 +39,8 @@ func Keys(table string) map[int]bool {
 	}
 	return keys
 }
+//Open the database and store it as private 
+//package variable
 func Init() error {
 	var err error
 	connStr := fmt.Sprintf(
@@ -51,12 +54,15 @@ func Init() error {
 	return err
 
 }
+//Close the database all errors will make
+//the Program crash so we don't have
+//to deal with errors on defer
 func Close() {
 	if err := pg.Close(); err != nil {
 		log.Fatalf("Can't Close Database: %s", err)
 	}
 }
-
+//Insert a datastructure as JSONB into the database
 func Insert(table string, key int, data interface{}) error {
 	var (
 		err      error
@@ -65,6 +71,6 @@ func Insert(table string, key int, data interface{}) error {
 	if jsonData, err = json.Marshal(data); err != nil {
 		return err
 	}
-	_, err = pg.Exec(`INSERT INTO esi(id, data) VALUES($1, $2)`, key, jsonData)
+	_, err = pg.Exec(`INSERT INTO `+table+`(id, data) VALUES($1, $2)`, key, jsonData)
 	return err
 }
