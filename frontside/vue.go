@@ -197,26 +197,26 @@ func getIndexes(s string) (m map[string]int, err error) {
 	if (m[TemplateStart] == -1 || m[TemplateEnd] == -1) || (m[TemplateEnd] < m[TemplateStart]) {
 		return nil, fmt.Errorf("Template Tag not well formed")
 	}
-	
-	checkScriptTags: 
+
+checkScriptTags:
 	if m[ScriptStart] == m[ScriptEnd] {
 		delete(m, ScriptStart)
 		delete(m, ScriptEnd)
 		goto checkStyleTags
-	} 
-		if (m[ScriptStart] == -1 || m[ScriptEnd] == -1) || (m[ScriptEnd] < m[ScriptStart]) {
-			return nil, fmt.Errorf("Script Tag not well formed")
-		}
-	checkStyleTags:
+	}
+	if (m[ScriptStart] == -1 || m[ScriptEnd] == -1) || (m[ScriptEnd] < m[ScriptStart]) {
+		return nil, fmt.Errorf("Script Tag not well formed")
+	}
+checkStyleTags:
 	if m[StyleStart] == m[StyleEnd] {
 		delete(m, StyleStart)
 		delete(m, StyleEnd)
 		goto result
-	} 
-		if (m[StyleStart] == -1 || m[StyleEnd] == -1) || (m[StyleEnd] < m[StyleStart]) {
-			return nil, fmt.Errorf("Style Tag not well formed")
-		}
-	
-	result:
+	}
+	if (m[StyleStart] == -1 || m[StyleEnd] == -1) || (m[StyleEnd] < m[StyleStart]) {
+		return nil, fmt.Errorf("Style Tag not well formed")
+	}
+
+result:
 	return m, nil
 }
