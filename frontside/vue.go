@@ -112,6 +112,8 @@ func parseDirectory(dirName string) (cs []*component, err error) {
 			return nil
 		}
 		// don't process hidden files
+		// TODO this looks wonky
+		// i probably checked only the root directory of this path
 		if strings.HasPrefix(info.Name(), ".") {
 			return nil
 		}
