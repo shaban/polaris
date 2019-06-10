@@ -10,6 +10,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+//EveDB is the entirety of the eve database tables
+//implemented as maps of database id to actual type
+type EveDB struct {
+	Blueprints   map[int]*Blueprint
+	CategoryIDs  map[int]*CategoryID
+	Certificates map[int]*Certificate
+	TypeIDs      map[int]*TypeID
+	GraphicIDs   map[int]*GraphicID
+	GroupIDs     map[int]*GroupID
+	IconIDs      map[int]*IconID
+}
+
 var (
 	pg *sql.DB
 )
@@ -60,10 +72,11 @@ func Close() {
 		log.Fatalf("Can't Close Database: %s", err)
 	}
 }
+
 //CreateIfNotExists creates a table as a key jsonb store
-func CreateIfNotExists(table string){
-	if _, err := pg.Exec(`CREATE TABLE IF NOT EXISTS `+table+` (id integer PRIMARY KEY, data jsonb NOT NULL)`);err != nil{
-		log.Fatalf("Can't create Table %s: %s",table,err)
+func CreateIfNotExists(table string) {
+	if _, err := pg.Exec(`CREATE TABLE IF NOT EXISTS ` + table + ` (id integer PRIMARY KEY, data jsonb NOT NULL)`); err != nil {
+		log.Fatalf("Can't create Table %s: %s", table, err)
 	}
 }
 

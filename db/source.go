@@ -6,10 +6,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-/*const (
-	CategoryIDs = "database.yaml.categoryIDs"
-)*/
-
 //LoadYaml decodes a yaml file into a suitable data structure
 //on specified yamlPath filepath
 func LoadYaml(dst interface{}, yamlPath string) error {

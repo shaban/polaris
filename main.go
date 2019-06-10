@@ -56,18 +56,29 @@ func main() {
 			if err = db.LoadYaml(&eve.TypeIDs,filePath);err!= nil{
 				log.Fatal(err)
 			}
-			return
+		case "graphicIDs":
+			if err = db.LoadYaml(&eve.GraphicIDs,filePath);err!= nil{
+				log.Fatal(err)
+			}
+		case "groupIDs":
+			if err = db.LoadYaml(&eve.GroupIDs,filePath);err!= nil{
+				log.Fatal(err)
+			}
+		case "iconIDs":
+			if err = db.LoadYaml(&eve.IconIDs,filePath);err!= nil{
+				log.Fatal(err)
+			}
 		}
 		//db.CreateIfNotExists(p)
 		println(filePath)
 	}
-	for k, v := range eve.Blueprints{
+	/*for k, v := range eve.Blueprints{
 		if v.Activities.Reaction.Time != 0{
 			t, _ := eve.TypeIDs[k]
 			println(t.Name.En, v.Activities.Reaction.Time)
 		}
 		
-	}
+	}*/
 	//categoryIDs := viper.GetString("database.yaml.categoryIDs")
 	/*if err = db.LoadYaml(&typeIDs, path+categoryIDs); err != nil {
 		log.Fatal(err.Error())
