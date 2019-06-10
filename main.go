@@ -1,16 +1,11 @@
 package main
 
 import (
-	//"bytes"
-	//"database/sql"
-	//"encoding/json"
-
+	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/shaban/polaris/db"
 	"github.com/spf13/viper"
 
-	//"io/ioutil"
-	//"fmt"
 	"log"
 )
 
@@ -29,22 +24,49 @@ func init() {
 }
 func main() {
 	var (
-		err     error
-		typeIDs = make(map[int]*db.TypeID)
-		//rows    *sql.Rows
-		//key     int
-		//keys    map[int]bool
+		//err     error
+		//typeIDs = make(map[int]*db.TypeID)
+		//blueprints = make(map[int]*db.Blueprint)
 	)
 	defer db.Close()
 	path := viper.GetString("path")
-	categoryIDs := viper.GetString("database.yaml.categoryIDs")
-	if err = db.LoadYaml(&typeIDs, path+categoryIDs); err != nil {
+	yamlPath := viper.GetString("database.yaml.path")
+	ext:= viper.GetString("database.yaml.extension")
+	paths := viper.GetStringSlice("database.yaml.files")
+
+	eve := new(db.EveDB)
+
+	for _, p := range paths{
+		//tableMap := make(map[int]interface{})
+		filePath := fmt.Sprintf("%s/%s/%s.%s",path, yamlPath,p,ext)
+		switch p{
+		case "blueprints":
+			db.LoadYaml(&eve.Blueprints,filePath)
+		case "categoryIDs":
+			db.LoadYaml(&eve.CategoryIDs,filePath)
+		case "certificates":
+			db.LoadYaml(&eve.Certificates,filePath)
+		case "typeIDs":
+			db.LoadYaml(&eve.TypeIDs,filePath)
+		}
+		//db.CreateIfNotExists(p)
+		println(filePath)
+	}
+	for k, v := range eve.Blueprints{
+		if v.Activities.Reaction.Time != 0{
+			t, _ := eve.TypeIDs[k]
+			println(t.Name["en"], v.Activities.Reaction.Time)
+		}
+		
+	}
+	//categoryIDs := viper.GetString("database.yaml.categoryIDs")
+	/*if err = db.LoadYaml(&typeIDs, path+categoryIDs); err != nil {
 		log.Fatal(err.Error())
 	}
 	keys := db.Keys("esi")
-	for k, v := range typeIDs{
-		if _, isInTable := keys[k];!isInTable{
-			db.Insert("esi",k,v)
+	for k, v := range typeIDs {
+		if _, isInTable := keys[k]; !isInTable {
+			db.Insert("esi", k, v)
 		}
-	}
+	}*/
 }

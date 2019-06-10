@@ -1,8 +1,13 @@
 package db
 
 import (
-	"gopkg.in/yaml.v2"
 	"os"
+
+	"gopkg.in/yaml.v2"
+)
+
+const (
+	CategoryIDs = "database.yaml.categoryIDs"
 )
 
 //LoadYaml decodes a yaml file into a suitable data structure

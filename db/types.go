@@ -1,5 +1,77 @@
 package db
 
+type EveDB struct {
+	Blueprints   map[int]*Blueprint
+	CategoryIDs  map[int]*CategoryID
+	Certificates map[int]*Certificate
+	TypeIDs      map[int]*TypeID
+}
+
+//Materials is a Blueprint Material
+type Materials struct {
+	Quantity int `json:"quantity"`
+	TypeID   int `json:"typeID"`
+}
+
+//Skills is a Blueprint Process Requirement
+type Skills struct {
+	Level  int `json:"level"`
+	TypeID int `json:"typeID"`
+}
+
+//Process is a Blueprint Activities Process
+type Process struct {
+	Materials []Materials `json:"materials"`
+	Products  []Materials `json:"products"`
+	Skills    []Skills    `json:"skills"`
+	Time      int         `json:"time"`
+}
+
+//Activities is a Blueprint Activity
+type Activities struct {
+	Reaction         Process `json:"reaction"`
+	Copying          Process `json:"copying"`
+	Invention        Process `json:"invention"`
+	Manufacturing    Process `json:"manufacturing"`
+	ResearchMaterial Process `json:"research_material"`
+	ResearchTime     Process `json:"research_time"`
+}
+
+//Blueprint holds blueprint information
+type Blueprint struct {
+	Activities         `json:"activities"`
+	BlueprintTypeID    int `json:"blueprintTypeID"`
+	MaxProductionLimit int `json:"maxProductionLimit"`
+}
+
+//CategoryID hols a categoryID
+type CategoryID struct {
+	IconID int `json:"iconID"`
+	Name   struct {
+		De string `json:"de"`
+		En string `json:"en"`
+		Fr string `json:"fr"`
+		Ja string `json:"ja"`
+		Ru string `json:"ru"`
+		Zh string `json:"zh"`
+	} `json:"name"`
+	Published bool `json:"published"`
+}
+type CertificateLevel struct {
+	Advanced int `json:"advanced"`
+	Basic    int `json:"basic"`
+	Elite    int `json:"elite"`
+	Improved int `json:"improved"`
+	Standard int `json:"standard"`
+}
+type Certificate struct {
+	Description    string                    `json:"description"`
+	GroupID        int                       `json:"groupID"`
+	Name           string                    `json:"name"`
+	RecommendedFor []int                     `json:"recommendedFor"`
+	SkillTypes     map[int]*CertificateLevel `json:"skillTypes"`
+}
+
 //TypeID holds the item information
 type TypeID struct {
 	GroupID       int               `yaml:"groupID"`
