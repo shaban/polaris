@@ -20,6 +20,7 @@ type EveDB struct {
 	GraphicIDs   map[int]*GraphicID
 	GroupIDs     map[int]*GroupID
 	IconIDs      map[int]*IconID
+	Skins map[int]Skin
 }
 
 var (

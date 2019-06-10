@@ -1,6 +1,7 @@
 package db
 
 import (
+	"log"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -22,5 +23,9 @@ func LoadYaml(dst interface{}, yamlPath string) error {
 	dec = yaml.NewDecoder(f)
 	dec.SetStrict(true)
 	defer f.Close()
-	return dec.Decode(dst)
+	if err = dec.Decode(dst); err != nil {
+		return err
+	}
+	log.Println(yamlPath, "loaded from YAML")
+	return nil
 }

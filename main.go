@@ -25,8 +25,7 @@ func init() {
 func main() {
 	var (
 		err     error
-		//typeIDs = make(map[int]*db.TypeID)
-		//blueprints = make(map[int]*db.Blueprint)
+		filePath string
 	)
 	defer db.Close()
 	path := viper.GetString("path")
@@ -38,7 +37,7 @@ func main() {
 
 	for _, p := range paths{
 		//tableMap := make(map[int]interface{})
-		filePath := fmt.Sprintf("%s/%s/%s.%s",path, yamlPath,p,ext)
+		filePath = fmt.Sprintf("%s/%s/%s.%s",path, yamlPath,p,ext)
 		switch p{
 		case "blueprints":
 			if err = db.LoadYaml(&eve.Blueprints,filePath);err!= nil{
@@ -68,9 +67,12 @@ func main() {
 			if err = db.LoadYaml(&eve.IconIDs,filePath);err!= nil{
 				log.Fatal(err)
 			}
+		case "skins":
+			if err = db.LoadYaml(&eve.Skins,filePath);err!= nil{
+				log.Fatal(err)
+			}
 		}
 		//db.CreateIfNotExists(p)
-		println(filePath)
 	}
 	/*for k, v := range eve.Blueprints{
 		if v.Activities.Reaction.Time != 0{
