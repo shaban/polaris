@@ -6,9 +6,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const (
+/*const (
 	CategoryIDs = "database.yaml.categoryIDs"
-)
+)*/
 
 //LoadYaml decodes a yaml file into a suitable data structure
 //on specified yamlPath filepath

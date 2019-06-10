@@ -24,7 +24,7 @@ func init() {
 }
 func main() {
 	var (
-		//err     error
+		err     error
 		//typeIDs = make(map[int]*db.TypeID)
 		//blueprints = make(map[int]*db.Blueprint)
 	)
@@ -41,13 +41,22 @@ func main() {
 		filePath := fmt.Sprintf("%s/%s/%s.%s",path, yamlPath,p,ext)
 		switch p{
 		case "blueprints":
-			db.LoadYaml(&eve.Blueprints,filePath)
+			if err = db.LoadYaml(&eve.Blueprints,filePath);err!= nil{
+				log.Fatal(err)
+			}
 		case "categoryIDs":
-			db.LoadYaml(&eve.CategoryIDs,filePath)
+			if err = db.LoadYaml(&eve.CategoryIDs,filePath);err!= nil{
+				log.Fatal(err)
+			}
 		case "certificates":
-			db.LoadYaml(&eve.Certificates,filePath)
+			if err = db.LoadYaml(&eve.Certificates,filePath);err!= nil{
+				log.Fatal(err)
+			}
 		case "typeIDs":
-			db.LoadYaml(&eve.TypeIDs,filePath)
+			if err = db.LoadYaml(&eve.TypeIDs,filePath);err!= nil{
+				log.Fatal(err)
+			}
+			return
 		}
 		//db.CreateIfNotExists(p)
 		println(filePath)
@@ -55,7 +64,7 @@ func main() {
 	for k, v := range eve.Blueprints{
 		if v.Activities.Reaction.Time != 0{
 			t, _ := eve.TypeIDs[k]
-			println(t.Name["en"], v.Activities.Reaction.Time)
+			println(t.Name.En, v.Activities.Reaction.Time)
 		}
 		
 	}

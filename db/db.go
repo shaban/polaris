@@ -36,7 +36,7 @@ func Keys(table string) map[int]bool {
 	return keys
 }
 
-//Open the database and store it as private
+//Init opens the database and stores it as a private
 //package variable
 func Init() error {
 	var err error
