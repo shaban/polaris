@@ -13,14 +13,6 @@ import (
 //EveDB is the entirety of the eve database tables
 //implemented as maps of database id to actual type
 type EveDB struct {
-	/*Blueprints   blueprints
-	CategoryIDs  categoryIDs
-	Certificates certificates
-	TypeIDs      typeIDs
-	GraphicIDs   graphicIDs
-	GroupIDs     groupIDs
-	IconIDs      iconIDs
-	Skins        skins*/
 	Mapping      map[string]mapper
 }
 
@@ -32,7 +24,8 @@ type mapper interface {
 	TableName() string
 	New(int, []byte) error
 }
-
+//EncodeByTableAndKey accesses items by tablename, row id
+//and then encodes the row in JSON into a writer interface
 func EncodeByTableAndKey(w io.Writer, table string, key int)error{
 	var (
 		v interface{}

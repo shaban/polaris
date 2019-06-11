@@ -1,6 +1,7 @@
 package server
 
 import (
+	"compress/gzip"
 	"fmt"
 	"log"
 	"net/http"
@@ -31,8 +32,12 @@ func handleAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		http.Error(w, "Not Found!", 404)
 	}
 	w.Header().Set("content-type", "application/json")
+	w.Header().Set("content-encoding", "gzip")
 
-	if err = db.EncodeByTableAndKey(w, table, id); err != nil {
+	gzip := gzip.NewWriter(w)
+	defer gzip.Close()
+
+	if err = db.EncodeByTableAndKey(gzip, table, id); err != nil {
 		http.Error(w, err.Error(), 500)
 	}
 }

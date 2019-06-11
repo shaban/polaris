@@ -19,6 +19,10 @@ var (
 	eve              *EveDB
 )
 
+//Open reads the configuration opens the postgres database
+//sets path variables and boostraps the type mapper interface
+//finally it loads all static data on an audit from yaml
+//otherwise from database into the mapper map
 func Open(conf *viper.Viper) {
 	var (
 		err error

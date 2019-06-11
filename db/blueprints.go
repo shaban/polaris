@@ -52,11 +52,7 @@ func (tt blueprints) GetByKey(key int) interface{} {
 }
 func (tt blueprints) SaveToDB() error {
 	for k, v := range tt {
-		b, err := json.Marshal(v)
-		if err != nil {
-			return err
-		}
-		if err = insert(tt.FileName(), k, b); err != nil {
+		if err := insert(tt.FileName(), k, v); err != nil {
 			return err
 		}
 	}
@@ -74,7 +70,7 @@ func (tt blueprints) New(id int, data []byte) error {
 		newItem = new(Blueprint)
 	)
 	if err = json.Unmarshal(data, newItem); err != nil {
-		return err
+		return fmt.Errorf("Can't load into Table:%s ID:%v %s",tt.TableName(),id,data)
 	}
 	tt[id] = newItem
 	return nil

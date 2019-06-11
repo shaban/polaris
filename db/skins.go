@@ -29,11 +29,7 @@ func (tt skins) FileName() string {
 }
 func (tt skins) SaveToDB() error {
 	for k, v := range tt {
-		b, err := json.Marshal(v)
-		if err != nil {
-			return err
-		}
-		if err = insert(tt.FileName(), k, b); err != nil {
+		if err := insert(tt.FileName(), k, v); err != nil {
 			return err
 		}
 	}

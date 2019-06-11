@@ -30,7 +30,7 @@ func loadStaticData() error {
 		if err = eve.Mapping[fileName].SaveToDB(); err != nil {
 			return err
 		}
-		return nil
+		continue
 	loadFromDatabase:
 		if err = eve.Mapping[fileName].LoadFromDB(); err != nil {
 			return err
