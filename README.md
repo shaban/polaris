@@ -7,6 +7,5 @@
  - [x] check if Tables are already created and only then load yaml
  - [x] if Tables are already created load Data from postgres instead
  - [ ] set up routing for Frontside HTML5 history API
- - [ ] proxy from Caddy to serve on port 80/443
  - [ ] bootstrap the vue.js app
- - [ ] set up json API for the vue app to query
+ - [x] set up json API for the vue app to query

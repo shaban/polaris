@@ -1,2 +1,4 @@
 static/
 config.json
+caddy.error.log
+caddy.log

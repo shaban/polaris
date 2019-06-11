@@ -12,38 +12,29 @@ func loadStaticData() error {
 	var (
 		filePath string
 		err      error
-		keys     []int
 		fileName string
 	)
-
-	//if no load yaml files
 	for _, fileName = range yamlFiles {
 		//is data already loaded?
 		if tableExists(fileName) {
 			//then load database instead
 			goto loadFromDatabase
 		}
+		//if no load yaml files
 		filePath = fmt.Sprintf("%s/%s/%s.%s", basePath, yamlPath, fileName, yamlExt)
 		if err = loadYaml(eve.Mapping[fileName], filePath); err != nil {
 			log.Fatalf("Can't load Yaml %s in %s", fileName, filePath)
 		}
 		//create a table from the extensionless filename
 		createIfNotExists(fileName)
-		keys = eve.keys(fileName)
-		for _, key := range keys {
-			row, ok := eve.byFileName(fileName, key)
-			if !ok {
-				return fmt.Errorf("Inserting Rows: Key %v does not exist in %s", key, fileName)
-			}
-
-			if err = Insert(fileName, key, row); err != nil {
-				log.Fatalf("Can't insert %s: %s", fileName, err)
-			}
-
+		if err = eve.Mapping[fileName].SaveToDB(); err != nil {
+			return err
 		}
 		return nil
-	loadFromDatabase: 
-	loadTable(fileName)
+	loadFromDatabase:
+		if err = eve.Mapping[fileName].LoadFromDB(); err != nil {
+			return err
+		}
 	}
 	return err
 }

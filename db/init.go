@@ -14,66 +14,53 @@ var (
 	yamlPath         string
 	yamlExt          string
 	yamlFiles        []string
-	//fileAllocations  map[string]interface{}
+
 	pg               *sql.DB
 	eve              *EveDB
 )
 
-func init() {
+func Open(conf *viper.Viper) {
 	var (
 		err error
 	)
-	viper.SetConfigName("config")
-	viper.AddConfigPath("$HOME/code/src/github.com/shaban/polaris")
-	if err = viper.ReadInConfig(); err != nil {
-		log.Fatalf("Fatal error config file: %s \n", err)
-	}
 	connectionString = fmt.Sprintf(
 		"user=%s dbname=%s password=%s host=%s",
-		viper.GetString("database.postgres.user"),
-		viper.GetString("database.postgres.db"),
-		viper.GetString("database.postgres.password"),
-		viper.GetString("database.postgres.host"),
+		conf.GetString("database.postgres.user"),
+		conf.GetString("database.postgres.db"),
+		conf.GetString("database.postgres.password"),
+		conf.GetString("database.postgres.host"),
 	)
 
 	if err = open(); err != nil {
 		log.Fatal(err)
 	}
 
-	basePath = viper.GetString("path")
-	yamlPath = viper.GetString("database.yaml.path")
-	yamlExt = viper.GetString("database.yaml.extension")
-	yamlFiles = viper.GetStringSlice("database.yaml.files")
+	basePath = conf.GetString("path")
+	yamlPath = conf.GetString("database.yaml.path")
+	yamlExt = conf.GetString("database.yaml.extension")
+	yamlFiles = conf.GetStringSlice("database.yaml.files")
 
 	eve = new(EveDB)
-	eve.Mapping = make(map[string]interface{})
+	eve.Mapping = make(map[string]mapper)
 
 	for _, fileName := range yamlFiles{
 		switch fileName{
 		case "blueprints":
-			eve.Blueprints=make(map[int]*Blueprint)
-			eve.Mapping[fileName]=&eve.Blueprints
+			eve.Mapping[fileName]=blueprints(make(map[int]*Blueprint))
 		case "categoryIDs":
-			eve.CategoryIDs=make(map[int]*CategoryID)
-			eve.Mapping[fileName]=&eve.CategoryIDs
+			eve.Mapping[fileName]=categoryIDs(make(map[int]*CategoryID))
 		case "certificates":
-			eve.Certificates=make(map[int]*Certificate)
-			eve.Mapping[fileName]=&eve.Certificates
+			eve.Mapping[fileName]=certificates(make(map[int]*Certificate))
 		case "typeIDs":
-			eve.TypeIDs=make(map[int]*TypeID)
-			eve.Mapping[fileName]=&eve.TypeIDs
+			eve.Mapping[fileName]=typeIDs(make(map[int]*TypeID))
 		case "graphicIDs":
-			eve.GraphicIDs=make(map[int]*GraphicID)
-			eve.Mapping[fileName]=&eve.GraphicIDs
+			eve.Mapping[fileName]=graphicIDs(make(map[int]*GraphicID))
 		case "groupIDs":
-			eve.GroupIDs=make(map[int]*GroupID)
-			eve.Mapping[fileName]=&eve.GroupIDs
+			eve.Mapping[fileName]=groupIDs(make(map[int]*GroupID))
 		case "iconIDs":
-			eve.IconIDs=make(map[int]*IconID)
-			eve.Mapping[fileName]=&eve.IconIDs
+			eve.Mapping[fileName]=iconIDs(make(map[int]*IconID))
 		case "skins":
-			eve.Skins=make(map[int]*Skin)
-			eve.Mapping[fileName]=&eve.Skins
+			eve.Mapping[fileName]=skins(make(map[int]*Skin))
 		}
 	}
 	if err = loadStaticData(); err != nil {
