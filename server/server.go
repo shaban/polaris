@@ -35,10 +35,12 @@ func handleAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("content-encoding", "gzip")
 	w.Header().Set("server", "Kengal 2.0")
 
-	gzip := gzip.NewWriter(w)
-	defer gzip.Close()
+	gz := gzip.NewWriter(w)
+	defer gz.Close()
 
-	if err = db.EncodeByTableAndKey(gzip, table, id); err != nil {
+	if err = db.EncodeByTableAndKey(gz, table, id); err != nil {
+		w.Header().Del("content-encoding")
+		w.Header().Set("content-type", "text/plain")
 		http.Error(w, err.Error(), 500)
 	}
 }

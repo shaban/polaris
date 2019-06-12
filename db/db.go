@@ -8,12 +8,17 @@ import (
 	"log"
 
 	_ "github.com/lib/pq" //postgres
+	"gopkg.in/yaml.v2"
 )
 
 //EveDB is the entirety of the eve database tables
 //implemented as maps of database id to actual type
 type EveDB struct {
-	Mapping      map[string]mapper
+	Mapping map[string]mapper
+}
+
+type customLoader interface {
+	LoadFromYAML(*yaml.Decoder) error
 }
 
 type mapper interface {
@@ -24,12 +29,12 @@ type mapper interface {
 	TableName() string
 	New(int, []byte) error
 }
+
 //EncodeByTableAndKey accesses items by tablename, row id
 //and then encodes the row in JSON into a writer interface
-func EncodeByTableAndKey(w io.Writer, table string, key int)error{
+func EncodeByTableAndKey(w io.Writer, table string, key int) error {
 	var (
 		v interface{}
-
 	)
 	if v = eve.Mapping[table].GetByKey(key); v == nil {
 		return fmt.Errorf("Can't get table:%s key:%v is nil", table, key)

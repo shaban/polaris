@@ -10,7 +10,7 @@ import (
 
 var (
 	connectionString string
-	BasePath         string
+	basePath         string
 	yamlPath         string
 	yamlExt          string
 	yamlFiles        []string
@@ -39,7 +39,7 @@ func Open(conf *viper.Viper) {
 		log.Fatal(err)
 	}
 
-	BasePath = conf.GetString("path")
+	basePath = conf.GetString("path")
 	yamlPath = conf.GetString("database.yaml.path")
 	yamlExt = conf.GetString("database.yaml.extension")
 	yamlFiles = conf.GetStringSlice("database.yaml.files")
@@ -65,6 +65,8 @@ func Open(conf *viper.Viper) {
 			eve.Mapping[fileName]=iconIDs(make(map[int]*IconID))
 		case "skins":
 			eve.Mapping[fileName]=skins(make(map[int]*Skin))
+		case "invMarketGroups":
+			eve.Mapping[fileName]=marketGroups(make(map[int]*MarketGroup))
 		}
 	}
 	if err = loadStaticData(); err != nil {
