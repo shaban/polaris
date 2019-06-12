@@ -10,7 +10,7 @@ import (
 
 var (
 	connectionString string
-	basePath         string
+	BasePath         string
 	yamlPath         string
 	yamlExt          string
 	yamlFiles        []string
@@ -39,7 +39,7 @@ func Open(conf *viper.Viper) {
 		log.Fatal(err)
 	}
 
-	basePath = conf.GetString("path")
+	BasePath = conf.GetString("path")
 	yamlPath = conf.GetString("database.yaml.path")
 	yamlExt = conf.GetString("database.yaml.extension")
 	yamlFiles = conf.GetStringSlice("database.yaml.files")

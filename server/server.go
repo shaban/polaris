@@ -2,7 +2,6 @@ package server
 
 import (
 	"compress/gzip"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,6 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/shaban/polaris/db"
 	"github.com/spf13/viper"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 var (
@@ -33,6 +33,7 @@ func handleAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 	w.Header().Set("content-type", "application/json")
 	w.Header().Set("content-encoding", "gzip")
+	w.Header().Set("server", "Kengal 2.0")
 
 	gzip := gzip.NewWriter(w)
 	defer gzip.Close()
@@ -50,8 +51,10 @@ func Start(conf *viper.Viper) {
 	port = conf.GetString("host.port")
 	router := httprouter.New()
 	router.GET("/api/:table/:id", handleAPI)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), router)) //136.243.94.189
-	//log.Fatal(http.ListenAndServe("136.243.94.189:8081", router))//136.243.94.189
+	err := http.Serve(autocert.NewListener(address), router)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }
 
 func setDebugOn() {

@@ -21,7 +21,7 @@ func loadStaticData() error {
 			goto loadFromDatabase
 		}
 		//if no load yaml files
-		filePath = fmt.Sprintf("%s/%s/%s.%s", basePath, yamlPath, fileName, yamlExt)
+		filePath = fmt.Sprintf("%s/%s/%s.%s", BasePath, yamlPath, fileName, yamlExt)
 		if err = loadYaml(eve.Mapping[fileName], filePath); err != nil {
 			log.Fatalf("Can't load Yaml %s in %s", fileName, filePath)
 		}
