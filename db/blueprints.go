@@ -1,12 +1,5 @@
 package db
 
-import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"strings"
-)
-
 //Materials is a Blueprint Material
 type Materials struct {
 	Quantity    int     `json:"quantity,omitempty" yaml:"quantity"`
@@ -45,7 +38,7 @@ type Blueprint struct {
 	MaxProductionLimit int `json:"maxProductionLimit,omitempty" yaml:"maxProductionLimit"`
 }
 
-type blueprints map[int]*Blueprint
+/*type blueprints map[int]*Blueprint
 
 func (tt blueprints) GetByKey(key int) interface{} {
 	return tt[key]
@@ -93,4 +86,4 @@ func (tt blueprints) LoadFromDB() error {
 		}
 	}
 	return nil
-}
+}*/

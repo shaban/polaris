@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"compress/gzip"
 	"log"
 	"net/http"
@@ -17,7 +18,19 @@ var (
 	address string
 	debug   bool
 )
-
+func handleMarketGroups(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	bc := db.MarketGroups.Breadcrumb(1674)
+	if bc == nil{
+		http.Error(w,"Not Found",404)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	enc := json.NewEncoder(w)
+	err := enc.Encode(bc)
+	if err != nil{
+		http.Error(w,err.Error(),500)
+	}
+}
 func handleAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var (
 		table string
@@ -53,6 +66,7 @@ func Start(conf *viper.Viper) {
 	port = conf.GetString("host.port")
 	router := httprouter.New()
 	router.GET("/api/:table/:id", handleAPI)
+	router.GET("/", handleMarketGroups)
 	err := http.Serve(autocert.NewListener(address), router)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

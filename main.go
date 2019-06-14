@@ -8,6 +8,7 @@ import (
 	"log"
 )
 
+//go:generate sh db/generate.sh
 var(
 	conf *viper.Viper
 )
